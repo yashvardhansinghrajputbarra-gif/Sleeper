@@ -17,6 +17,10 @@
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --text-dark: #4b5563;
+
+            /* Drawer Variables */
+            --drawer-bg: rgba(15, 19, 26, 0.95);
+            --drawer-border: rgba(255, 255, 255, 0.08);
         }
 
         body {
@@ -72,6 +76,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         /* Premium Centerpiece Clock Header */
@@ -296,6 +301,181 @@
             font-weight: 600;
         }
 
+        /* ==================== HIDDEN UTILITY DRAWER SYSTEM ==================== */
+        .drawer-toggle-btn {
+            position: absolute;
+            top: 3vh;
+            right: 2vw;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--panel-border);
+            color: var(--text-muted);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .drawer-toggle-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .utility-drawer {
+            position: fixed;
+            top: 0;
+            right: -420px; /* Hidden off-screen baseline */
+            width: 380px;
+            height: 100vh;
+            background: var(--drawer-bg);
+            border-left: 1px solid var(--drawer-border);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 99;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .utility-drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .drawer-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-warm);
+        }
+
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .drawer-close-btn:hover {
+            color: var(--text-main);
+        }
+
+        .calc-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .calc-headline {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .calc-row-inputs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .drawer-input-group {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 8px 12px;
+            flex: 1;
+        }
+
+        .drawer-input-group span {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .drawer-input-group input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .drawer-input-group input[type="number"] {
+            width: 100%;
+        }
+
+        .calc-action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .math-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .math-btn:hover {
+            background: var(--accent-warm-dim);
+            border-color: var(--accent-warm);
+        }
+
+        .calc-result-strip {
+            background: rgba(245, 158, 11, 0.03);
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calc-res-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .calc-res-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
         @media (max-width: 850px) {
             body { overflow-y: auto; height: auto; padding: 20px 10px; }
             .main-container { height: auto; max-height: none; padding: 25px 15px; border-radius: 16px; }
@@ -304,10 +484,14 @@
             .clock-digits { font-size: 38px; }
             input[type="time"], input[type="number"] { font-size: 18px; }
             .time-readout { font-size: 18px; }
+            .utility-drawer { width: 100vw; right: -100vw; }
+            .drawer-toggle-btn { position: fixed; top: 15px; right: 15px; }
         }
     </style>
 </head>
 <body>
+
+    <button class="drawer-toggle-btn" onclick="toggleDrawer()">[ = ] Quick Calc</button>
 
     <div class="main-container">
         <header>
@@ -360,281 +544,4 @@
                                 <input type="time" id="directSleepTime" oninput="runDurationAnalysis()">
                             </div>
                             <div class="input-meta">
-                                <span class="meta-title">Wake Time</span>
-                                <input type="time" id="directWakeTime" oninput="runDurationAnalysis()">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="output-stack" id="durationOutputBox"></div>
-                </div>
-
-                <div class="card-column">
-                    <div class="section-label">🎯 Target Hours Configuration</div>
-                    <div class="input-strip">
-                        <div class="input-wrapper-row" style="width: 100%;">
-                            <div class="input-meta">
-                                <span class="meta-title">Target Wake Time</span>
-                                <input type="time" id="targetWakeTime" oninput="runTargetAnalysis()">
-                            </div>
-                            <div class="input-meta">
-                                <span class="meta-title">Desired Hours</span>
-                                <input type="number" id="desiredHours" min="1" max="24" step="0.5" oninput="runTargetAnalysis()">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="output-stack" id="targetOutputBox"></div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-<script>
-    function formatTimeStrings(date) {
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        minutes = String(minutes).padStart(2, '0');
-        return `${hours}:${minutes} ${ampm}`;
-    }
-
-    function saveState(id, value) {
-        localStorage.setItem(id, value);
-    }
-
-    function getTargetDateObject(timeString) {
-        if (!timeString) return null;
-        const [h, m] = timeString.split(':').map(Number);
-        const now = new Date();
-        let target = new Date();
-        target.setHours(h, m, 0, 0);
-        if (target < now) {
-            target.setDate(target.getDate() + 1);
-        }
-        return target;
-    }
-
-    // High performance UI ticking logic loops
-    function systemHeartbeatEngine() {
-        const now = new Date();
-
-        // 1. Sync Dashboard Master Clock Values
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        
-        document.getElementById("timeDigits").textContent = `${String(hours).padStart(2, '0')}:${minutes}`;
-        document.getElementById("timeSuffix").textContent = ampm;
-
-        const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-        document.getElementById("dateDigits").textContent = now.toLocaleDateString('en-US', dateOptions).toUpperCase();
-
-        // 2. Compute Active Countdown Nodes
-        const bInput = document.getElementById('bedtime').value;
-        const bBadge = document.getElementById('bedtimeCountdown');
-        if (bInput) {
-            const tBed = getTargetDateObject(bInput);
-            let d = tBed - now;
-            let h = String(Math.floor(d / 3600000)).padStart(2, '0');
-            let m = String(Math.floor((d % 3600000) / 60000)).padStart(2, '0');
-            bBadge.innerText = `${h}h ${m}m remaining`;
-        }
-
-        const wInput = document.getElementById('wakeuptime').value;
-        const wBadge = document.getElementById('wakeupCountdown');
-        if (wInput) {
-            const tWake = getTargetDateObject(wInput);
-            let d = tWake - now;
-            let h = String(Math.floor(d / 3600000)).padStart(2, '0');
-            let m = String(Math.floor((d % 3600000) / 60000)).padStart(2, '0');
-            wBadge.innerText = `${h}h ${m}m remaining`;
-        }
-
-        runBedtimeAnalysis();
-    }
-
-    function runWakeupAnalysis() {
-        const inputVal = document.getElementById('bedtime').value;
-        if (!inputVal) return;
-        saveState('bedtime', inputVal);
-
-        const [h, m] = inputVal.split(':').map(Number);
-        let sleepOnset = new Date();
-        sleepOnset.setHours(h, m, 0, 0);
-        sleepOnset.setMinutes(sleepOnset.getMinutes() + 10);
-
-        document.getElementById('onsetNotification').innerHTML = `
-            <div class="onset-banner">Approximate sleep onset: <span>${formatTimeStrings(sleepOnset)}</span></div>
-        `;
-        
-        const stack = document.getElementById('bedtimeOutputStack');
-        stack.innerHTML = "";
-        
-        const labelsMap = {3: '4.5h', 4: '6.0h', 5: '7.5h', 6: '9.0h'};
-        [3, 4, 5, 6].forEach(cycles => {
-            const mins = cycles * 90;
-            const wakeTarget = new Date(sleepOnset.getTime() + mins * 60000);
-            const row = document.createElement('div');
-            row.className = (cycles === 5 || cycles === 6) ? 'metric-row optimal' : 'metric-row';
-            
-            row.innerHTML = `
-                <div class="metric-core">
-                    <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
-                    <span class="time-readout">${formatTimeStrings(wakeTarget)}</span>
-                </div>
-                ${(cycles === 5 || cycles === 6) ? '<span class="tag-status-optimal">Optimal Target</span>' : `<span class="label-readout">${Math.floor(mins / 60)}h ${mins % 60}m</span>`}
-            `;
-            stack.appendChild(row);
-        });
-    }
-
-    function runBedtimeAnalysis() {
-        const inputVal = document.getElementById('wakeuptime').value;
-        if (!inputVal) return;
-        saveState('wakeuptime', inputVal);
-
-        const [wH, wM] = inputVal.split(':').map(Number);
-        const now = new Date();
-        let wakeTarget = new Date();
-        wakeTarget.setHours(wH, wM, 0, 0);
-
-        if (wakeTarget < now && (now.getTime() - wakeTarget.getTime() > 3600000)) {
-            wakeTarget.setDate(wakeTarget.getDate() + 1);
-        }
-
-        const stack = document.getElementById('wakeupOutputStack');
-        const internalSnapshot = stack.innerHTML;
-        
-        let calculatedHTML = "";
-        let optimalFlag = false;
-        const labelsMap = {6: '9.0h', 5: '7.5h', 4: '6.0h', 3: '4.5h'};
-
-        [6, 5, 4, 3].forEach(cycles => {
-            const mins = cycles * 90;
-            const bedtimeTarget = new Date(wakeTarget.getTime() - (mins + 10) * 60000);
-            const hrsCount = Math.floor(mins / 60);
-            const minsCount = mins % 60;
-
-            if (now > bedtimeTarget) {
-                calculatedHTML += `
-                    <div class="metric-row past">
-                        <div class="metric-core">
-                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
-                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
-                        </div>
-                        <span class="label-readout">Elapsed</span>
-                    </div>`;
-            } else if (!optimalFlag && (cycles === 5 || cycles === 6)) {
-                calculatedHTML += `
-                    <div class="metric-row optimal">
-                        <div class="metric-core">
-                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
-                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
-                        </div>
-                        <span class="tag-status-optimal">Optimal Target</span>
-                    </div>`;
-                optimalFlag = true;
-            } else {
-                calculatedHTML += `
-                    <div class="metric-row">
-                        <div class="metric-core">
-                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
-                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
-                        </div>
-                        <span class="label-readout">${hrsCount}h ${minsCount}m</span>
-                    </div>`;
-            }
-        });
-
-        if (internalSnapshot !== calculatedHTML) {
-            stack.innerHTML = calculatedHTML;
-        }
-    }
-
-    function runDurationAnalysis() {
-        const sVal = document.getElementById('directSleepTime').value;
-        const wVal = document.getElementById('directWakeTime').value;
-        if (!sVal || !wVal) return;
-        
-        saveState('directSleepTime', sVal);
-        saveState('directWakeTime', wVal);
-
-        const [sH, sM] = sVal.split(':').map(Number);
-        const [wH, wM] = wVal.split(':').map(Number);
-
-        let sDate = new Date(2000, 0, 1, sH, sM);
-        let wDate = new Date(2000, 0, 1, wH, wM);
-
-        if (wDate <= sDate) {
-            wDate.setDate(wDate.getDate() + 1);
-        }
-
-        let deltaMs = wDate - sDate - (10 * 60 * 1000);
-        if (deltaMs < 0) deltaMs = 0;
-
-        const totalMins = Math.floor(deltaMs / 60000);
-        const h = Math.floor(totalMins / 60);
-        const m = totalMins % 60;
-
-        document.getElementById('durationOutputBox').innerHTML = `
-            <div class="metric-row optimal" style="width: 100%">
-                <div class="metric-core">
-                    <span class="time-readout">${h}h ${m}m</span>
-                </div>
-                <span class="tag-status-optimal">Calculated Net Sleep</span>
-            </div>`;
-    }
-
-    function runTargetAnalysis() {
-        const wVal = document.getElementById('targetWakeTime').value;
-        const hVal = parseFloat(document.getElementById('desiredHours').value);
-        if (!wVal || isNaN(hVal)) return;
-
-        saveState('targetWakeTime', wVal);
-        saveState('desiredHours', hVal);
-
-        const [wH, wM] = wVal.split(':').map(Number);
-        let wDate = new Date(2000, 0, 2, wH, wM); 
-
-        const totalSub = (hVal * 60) + 10;
-        let bDate = new Date(wDate.getTime() - (totalSub * 60000));
-
-        document.getElementById('targetOutputBox').innerHTML = `
-            <div class="metric-row optimal" style="width: 100%">
-                <div class="metric-core">
-                    <span class="time-readout">${formatTimeStrings(bDate)}</span>
-                </div>
-                <span class="tag-status-optimal">Ideal Target Bedtime</span>
-            </div>`;
-    }
-
-    // Default configuration hydration mapping
-    const fallbackMap = {
-        'bedtime': '22:30',
-        'wakeuptime': '06:00',
-        'directSleepTime': '23:00',
-        'directWakeTime': '07:00',
-        'targetWakeTime': '06:30',
-        'desiredHours': '8'
-    };
-
-    Object.keys(fallbackMap).forEach(key => {
-        const stored = localStorage.getItem(key);
-        document.getElementById(key).value = stored !== null ? stored : fallbackMap[key];
-    });
-    
-    // Initial evaluations setup
-    runWakeupAnalysis();
-    runBedtimeAnalysis();
-    runDurationAnalysis();
-    runTargetAnalysis();
-
-    // Fire continuous engine loop sequences
-    systemHeartbeatEngine();
-    setInterval(systemHeartbeatEngine, 1000);
-</script>
-
-</body>
-</html>
+                                <span class="meta-title">Wake Time
