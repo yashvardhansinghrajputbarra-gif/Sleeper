@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Warrior Sleep Matrix System (Full-Screen Mode)</title>
+    <title>Warrior Sleep Matrix System (Tactical HUD)</title>
     
-    <meta name="theme-color" content="#090b0e">
+    <meta name="theme-color" content="#06080c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
         :root {
-            --glass-bg: rgba(20, 24, 33, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.5);
-            --text-pill: rgba(255, 255, 255, 0.3);
-            --accent-glow: rgba(0, 163, 255, 0.15);
-            --accent-optimal: #38bdf8;
-            --accent-past: rgba(255, 255, 255, 0.15);
+            --hud-bg: rgba(10, 15, 24, 0.7);
+            --hud-border: rgba(56, 189, 248, 0.2);
+            --hud-glow: rgba(56, 189, 248, 0.08);
+            
+            --text-neon: #38bdf8;
+            --text-bright: #ffffff;
+            --text-muted: #64748b;
+            --text-dim: #334155;
+            
+            --accent-optimal: #06b6d4;
+            --accent-past: rgba(255, 255, 255, 0.08);
         }
 
         body {
             margin: 0;
-            background: #090b0e;
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+            background: #04060a;
+            color: var(--text-bright);
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
             
-            /* Enforcing strict non-scrollable fullscreen behavior */
             height: 100vh;
             width: 100vw;
             display: flex;
@@ -37,185 +39,160 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
-            -webkit-font-smoothing: antialiased;
             padding: 2vh 2vw;
         }
 
-        /* Fluid Depth Background Layers */
+        /* Matrix Background Noise grid layer */
         body::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 15% 15%, #111823 0%, transparent 50%),
-                radial-gradient(circle at 85% 85%, #16202e 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, #07090d 0%, #090b0e 80%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(56, 189, 248, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
             z-index: -2;
             pointer-events: none;
         }
 
-        /* Responsive Full-Window Glass Container */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(190%);
-            -webkit-backdrop-filter: blur(30px) saturate(190%);
-            border: 1px solid var(--glass-border);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2.5vh;
+        /* Ambient deep gradient */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, #04060a 90%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Tactical HUD Main Frame */
+        .hud-console {
+            background: var(--hud-bg);
+            border: 1px solid var(--hud-border);
+            box-shadow: 0 0 40px var(--hud-glow), inset 0 0 20px rgba(56, 189, 248, 0.05);
+            border-radius: 4px;
             
-            /* Dynamic dimensional math matching fullscreen layout height */
             width: 96vw;
-            max-width: 1200px;
-            height: 92vh;
-            max-height: 850px;
+            max-width: 1250px;
+            height: 94vh;
+            max-height: 880px;
             
-            padding: 3.5vh 3.5vw;
+            padding: 4vh 3vw;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 
-                0 25px 55px -5px rgba(0, 0, 0, 0.5),
-                0 40px 90px -10px rgba(0, 0, 0, 0.7),
-                inset 0 1px 0px rgba(255, 255, 255, 0.05);
+            position: relative;
         }
+
+        /* Decorative HUD Corner brackets */
+        .hud-console::before, .hud-console::after {
+            content: ""; position: absolute; width: 20px; height: 20px; border-color: var(--text-neon); border-style: solid; pointer-events: none;
+        }
+        .hud-console::before { top: -1px; left: -1px; border-width: 3px 0 0 3px; }
+        .hud-console::after { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; }
 
         header {
             text-align: center;
-            margin-bottom: 1.5vh;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            padding-bottom: 2vh;
+            margin-bottom: 2vh;
+            position: relative;
         }
 
-        .main-title {
-            margin: 0;
-            font-size: 1.3vh;
-            font-weight: 700;
-            letter-spacing: 4px;
-            color: var(--text-dim);
+        .hud-tag {
+            font-size: 1.2vh;
+            letter-spacing: 5px;
+            color: var(--text-neon);
             text-transform: uppercase;
+            font-weight: 700;
         }
 
-        /* Monospace Fullscreen System Wall Clock */
-        .matrix-row-inline {
+        /* System Wall Clock Display */
+        .clock-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1vw;
+            gap: 0.5vw;
             margin: 1vh 0;
         }
 
-        .matrix-unit {
-            display: flex;
-            align-items: baseline;
-            gap: 2px;
-        }
-
-        .matrix-num {
-            font-size: 5vh;
+        .clock-num {
+            font-size: 6vh;
             font-weight: 700;
-            letter-spacing: -1px;
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-            color: var(--text-main);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            color: var(--text-bright);
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
-        .matrix-label {
-            font-size: 1.5vh;
-            font-weight: 500;
-            color: var(--text-dim);
-            text-transform: lowercase;
+        .clock-sec {
+            font-size: 3vh;
+            color: var(--text-neon);
+            align-self: flex-end;
+            margin-bottom: 0.8vh;
+            opacity: 0.8;
         }
 
-        .matrix-separator {
-            font-size: 4vh;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.15);
-            position: relative;
-            top: -0.4vh;
-        }
-
-        .pill-container {
-            display: flex;
-            justify-content: center;
-        }
-
-        .pill {
+        .system-date {
             font-size: 1.3vh;
-            font-weight: 500;
-            background: rgba(10, 12, 17, 0.4);
-            color: rgba(255, 255, 255, 0.6);
-            padding: 0.6vh 2vw;
-            border-radius: 100px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .pill span {
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace;
-            color: var(--text-main);
-            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         /* Grid Framework Layouts */
         .split-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3vw;
+            gap: 4vw;
             flex-grow: 1;
             margin-bottom: 2vh;
         }
 
         .full-width-section {
-            border-top: 1px dashed rgba(255, 255, 255, 0.06);
-            padding-top: 2vh;
+            border-top: 1px dashed rgba(56, 189, 248, 0.15);
+            padding-top: 2.5vh;
         }
 
         .clutter-free-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3vw;
+            gap: 4vw;
         }
 
         .column-section {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
         }
 
         .column-headline {
             font-size: 1.3vh;
-            font-weight: 600;
-            margin-bottom: 1vh;
-            color: var(--text-dim);
-            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 1.5vh;
+            color: var(--text-muted);
+            letter-spacing: 2px;
             text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            border-left: 3px solid var(--text-neon);
+            padding-left: 8px;
         }
 
-        /* Fluid Row Cards */
+        /* Tactical Node Module Rows */
         .interactive-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 12, 17, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 1.2vh;
-            padding: 1.2vh 1.2vw;
-            margin-bottom: 1vh;
-            gap: 12px;
-            transition: all 0.2s ease;
+            background: rgba(56, 189, 248, 0.02);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            padding: 1.5vh 1.2vw;
+            margin-bottom: 1.5vh;
+            position: relative;
         }
 
         .interactive-row:focus-within {
-            border-color: rgba(56, 189, 248, 0.3);
-            background: rgba(10, 12, 17, 0.55);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 2vw;
-            align-items: center;
-            width: 100%;
+            border-color: var(--text-neon);
+            background: rgba(56, 189, 248, 0.05);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
         }
 
         .input-meta-box {
@@ -226,62 +203,66 @@
 
         .input-label {
             font-size: 1.1vh;
-            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-pill);
-            margin-bottom: 0.4vh;
+            letter-spacing: 1px;
+            color: var(--text-neon);
+            margin-bottom: 0.6vh;
+        }
+
+        .input-wrapper-inline {
+            display: flex;
+            gap: 2vw;
+            align-items: center;
         }
 
         input[type="time"], input[type="number"] {
             background: transparent;
             border: none;
-            color: var(--text-main);
-            font-size: 2.4vh;
+            color: var(--text-bright);
+            font-size: 2.6vh;
             font-weight: 700;
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace;
+            font-family: inherit;
             outline: none;
             cursor: pointer;
             padding: 0;
         }
 
         input[type="number"] {
-            width: 5vw;
-            max-width: 80px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+            width: 70px;
+            border-bottom: 1px solid var(--text-neon);
         }
 
         input[type="time"]::-webkit-calendar-picker-indicator {
-            filter: invert(1) opacity(0.3);
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg);
+            cursor: pointer;
         }
 
         .live-section-counter {
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace;
             font-size: 1.3vh;
-            font-weight: 600;
-            color: var(--accent-optimal);
-            background: rgba(56, 189, 248, 0.08);
-            border: 1px solid rgba(56, 189, 248, 0.15);
+            font-weight: 700;
+            color: var(--text-bright);
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--text-neon);
             padding: 0.6vh 1vw;
-            border-radius: 30px;
-            white-space: nowrap;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 5px var(--text-neon);
         }
 
         .output-stack {
             display: flex;
             flex-direction: column;
-            gap: 0.8vh;
+            gap: 1vh;
         }
 
+        /* Output Telemetry Modules */
         .metric-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1vh 1.2vw;
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            border-radius: 1vh;
+            padding: 1.2vh 1.2vw;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
         }
 
         .metric-identity {
@@ -291,125 +272,112 @@
         }
 
         .cycle-count {
-            font-size: 1.1vh;
+            font-size: 1.2vh;
             font-weight: 700;
-            color: var(--text-pill);
-            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-neon);
+            border: 1px solid rgba(56, 189, 248, 0.3);
             padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
+            background: rgba(56, 189, 248, 0.05);
         }
 
         .time-value {
-            font-size: 2.2vh;
+            font-size: 2.4vh;
             font-weight: 700;
-            color: var(--text-main);
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace;
+            color: var(--text-bright);
         }
 
         .duration-label {
-            font-size: 1.3vh;
-            font-weight: 500;
-            color: var(--text-dim);
+            font-size: 1.4vh;
+            color: var(--text-muted);
         }
 
         .status-tracker {
-            font-size: 1.1vh;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 1.2vh;
+            font-weight: 700;
+            letter-spacing: 1px;
             color: var(--accent-optimal);
+            text-transform: uppercase;
         }
 
         .metric-item.past { 
-            opacity: 0.25; 
+            opacity: 0.15; 
             background: transparent;
-            border-color: transparent;
+            border-color: rgba(255, 255, 255, 0.02);
         }
+        .metric-item.past .cycle-count { color: var(--text-muted); border-color: transparent; background: transparent; }
 
         .metric-item.optimal {
-            background: rgba(56, 189, 248, 0.03);
-            border-color: rgba(56, 189, 248, 0.12);
+            background: rgba(6, 182, 212, 0.04);
+            border-color: rgba(6, 182, 212, 0.3);
         }
         
         .metric-item.optimal .time-value {
             color: #ffffff;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
 
         .notice-banner {
             font-size: 1.3vh;
-            font-weight: 500;
-            color: var(--text-dim);
-            padding: 0 4px 0.5vh 4px;
+            color: var(--text-muted);
+            padding: 0 0 0.8vh 4px;
         }
 
         .notice-banner span {
-            color: var(--accent-optimal);
-            font-weight: 600;
+            color: var(--text-neon);
+            font-weight: 700;
         }
 
         @media (max-width: 850px) {
             body { overflow-y: auto; height: auto; padding: 20px 10px; }
-            .glass-panel { height: auto; max-height: none; padding: 25px 16px; border-radius: 20px; }
+            .hud-console { height: auto; max-height: none; padding: 30px 15px; }
             .split-grid, .clutter-free-grid { grid-template-columns: 1fr; gap: 30px; }
             .interactive-row { padding: 15px; }
-            .matrix-num { font-size: 40px; }
-            input[type="time"], input[type="number"] { font-size: 20px; }
-            .time-value { font-size: 18px; }
+            .clock-num { font-size: 45px; }
+            input[type="time"], input[type="number"] { font-size: 22px; }
+            .time-value { font-size: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glass-panel">
+    <div class="hud-console">
         <header>
-            <h1 class="main-title">Warrior Sleep Matrix System</h1>
+            <div class="hud-tag">// SLEEP MATRIX COMMAND CONSOLE</div>
             
-            <div class="matrix-row-inline">
-                <div class="matrix-unit">
-                    <span class="matrix-num" id="coreHours">00</span>
-                    <span class="matrix-label">h</span>
-                </div>
-                <span class="matrix-separator">:</span>
-                <div class="matrix-unit">
-                    <span class="matrix-num" id="coreMinutes">00</span>
-                    <span class="matrix-label">m</span>
-                </div>
-                <span class="matrix-separator">:</span>
-                <div class="matrix-unit">
-                    <span class="matrix-num" id="coreSeconds">00</span>
-                    <span class="matrix-label">s</span>
-                </div>
+            <div class="clock-row">
+                <span class="clock-num" id="coreClock">00:00</span>
+                <span class="clock-sec" id="coreSec">.00</span>
             </div>
 
-            <div class="pill-container">
-                <div class="pill" id="coreCalendarString">Synchronizing timeline...</div>
-            </div>
+            <div class="system-date" id="coreDate">SYSTEM LOG OFFLINE</div>
         </header>
 
         <div class="split-grid">
             <div class="column-section">
-                <div class="column-headline">🌙 Bedtime Strategy</div>
+                <div class="column-headline">
+                    <span>⚡ BEDTIME STRATEGY</span>
+                </div>
                 <div class="interactive-row">
                     <div class="input-meta-box">
-                        <span class="input-label">Planned Bedtime</span>
+                        <span class="input-label">PLANNED DEPARTURE</span>
                         <input type="time" id="bedtime" oninput="calculateWakeup()">
                     </div>
-                    <div class="live-section-counter" id="bedtimeCountdown">00h 00m left</div>
+                    <div class="live-section-counter" id="bedtimeCountdown">T-MINUS 00h 00m</div>
                 </div>
                 <div id="bedtimeNotice"></div>
                 <div class="output-stack" id="bedtimeResults"></div>
             </div>
 
             <div class="column-section">
-                <div class="column-headline">☀️ Wakeup Target</div>
+                <div class="column-headline">
+                    <span>⚡ WAKEUP TARGETS</span>
+                </div>
                 <div class="interactive-row">
                     <div class="input-meta-box">
-                        <span class="input-label">Alarm Configuration</span>
+                        <span class="input-label">ALARM CONFIGURATION</span>
                         <input type="time" id="wakeuptime" oninput="calculateBedtimes()">
                     </div>
-                    <div class="live-section-counter" id="wakeupCountdown">00h 00m left</div>
+                    <div class="live-section-counter" id="wakeupCountdown">T-MINUS 00h 00m</div>
                 </div>
                 <div class="output-stack" id="wakeupResults"></div>
             </div>
@@ -419,15 +387,15 @@
             <div class="clutter-free-grid">
                 
                 <div class="column-section">
-                    <div class="column-headline">⏱️ Sleep Duration Evaluator</div>
+                    <div class="column-headline">📊 TELEMETRY EVALUATOR</div>
                     <div class="interactive-row">
-                        <div class="input-group">
+                        <div class="input-wrapper-inline" style="width: 100%;">
                             <div class="input-meta-box">
-                                <span class="input-label">Sleep Time</span>
+                                <span class="input-label">SLEEP TIME</span>
                                 <input type="time" id="directSleepTime" oninput="evaluateDuration()">
                             </div>
                             <div class="input-meta-box">
-                                <span class="input-label">Wake Time</span>
+                                <span class="input-label">WAKE TIME</span>
                                 <input type="time" id="directWakeTime" oninput="evaluateDuration()">
                             </div>
                         </div>
@@ -436,15 +404,15 @@
                 </div>
 
                 <div class="column-section">
-                    <div class="column-headline">🎯 Specific Hours Target</div>
+                    <div class="column-headline">🎯 SPECIFIC HOURS STRATEGY</div>
                     <div class="interactive-row">
-                        <div class="input-group">
+                        <div class="input-wrapper-inline" style="width: 100%;">
                             <div class="input-meta-box">
-                                <span class="input-label">Wake Target</span>
+                                <span class="input-label">TARGET WAKE TIME</span>
                                 <input type="time" id="targetWakeTime" oninput="evaluateBedtimeTarget()">
                             </div>
                             <div class="input-meta-box">
-                                <span class="input-label">Hours Desired</span>
+                                <span class="input-label">HOURS DESIRED</span>
                                 <input type="number" id="desiredHours" min="1" max="24" step="0.5" oninput="evaluateBedtimeTarget()">
                             </div>
                         </div>
@@ -461,9 +429,8 @@
         let hours = date.getHours();
         let minutes = date.getMinutes();
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
+        hours = hours % 12 || 12;
+        minutes = String(minutes).padStart(2, '0');
         return `${hours}:${minutes} ${ampm}`;
     }
 
@@ -483,49 +450,47 @@
         return target;
     }
 
-    // Dynamic ticking synchronization engine
+    // Dynamic continuous execution engine loops
     function systemDynamicEngineTick() {
         const now = new Date();
 
-        // 1. Core Clock Updates
+        // 1. Sync System Clock Displays
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
         
-        document.getElementById("coreHours").textContent = String(hours).padStart(2, '0');
-        document.getElementById("coreMinutes").textContent = minutes;
-        document.getElementById("coreSeconds").textContent = seconds;
+        document.getElementById("coreClock").textContent = `${String(hours).padStart(2, '0')}:${minutes}`;
+        document.getElementById("coreSec").textContent = `.${seconds} ${ampm}`;
 
-        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-        document.getElementById("coreCalendarString").innerHTML = `🌐 <span>${now.toLocaleDateString('en-US', options)}</span> <span>[${ampm}]</span>`;
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById("coreDate").textContent = `LOC // ${now.toLocaleDateString('en-US', options)}`;
 
-        // 2. Bedtime Live Countdowns
+        // 2. Sync Active Live Bedtime Countdowns
         const bedtimeVal = document.getElementById('bedtime').value;
         const bedBadge = document.getElementById('bedtimeCountdown');
         if (bedtimeVal) {
             const targetBed = getNextTargetDate(bedtimeVal);
             let diff = targetBed - now;
-            let h = Math.floor(diff / 3600000);
-            let m = Math.floor((diff % 3600000) / 60000);
-            let s = Math.floor((diff % 60000) / 1000);
-            bedBadge.innerText = `${h}h ${m}m ${s}s left`;
+            let h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+            let m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            let s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            bedBadge.innerText = `T-MINUS ${h}h ${m}m ${s}s`;
         }
 
-        // 3. Wake Target Live Countdowns
+        // 3. Sync Active Live Wakeup Target Countdowns
         const wakeVal = document.getElementById('wakeuptime').value;
         const wakeBadge = document.getElementById('wakeupCountdown');
         if (wakeVal) {
             const targetWake = getNextTargetDate(wakeVal);
             let diff = targetWake - now;
-            let h = Math.floor(diff / 3600000);
-            let m = Math.floor((diff % 3600000) / 60000);
-            let s = Math.floor((diff % 60000) / 1000);
-            wakeBadge.innerText = `${h}h ${m}m ${s}s left`;
+            let h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+            let m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            let s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            wakeBadge.innerText = `T-MINUS ${h}h ${m}m ${s}s`;
         }
 
-        // Live refresh logic thresholds for transitions
         calculateBedtimes();
     }
 
@@ -540,12 +505,13 @@
         sleepTime.setMinutes(sleepTime.getMinutes() + 10);
 
         document.getElementById('bedtimeNotice').innerHTML = `
-            <div class="notice-banner">True sleep onset timed at <span>${formatAMPM(sleepTime)}</span></div>
+            <div class="notice-banner">> SLEEP ONSET DETECTED AT <span>${formatAMPM(sleepTime)}</span></div>
         `;
         
         const container = document.getElementById('bedtimeResults');
         container.innerHTML = "";
         
+        const cyclesMap = {3: '4.5h', 4: '6.0h', 5: '7.5h', 6: '9.0h'};
         [3, 4, 5, 6].forEach(cycles => {
             const duration = cycles * 90;
             const wakeup = new Date(sleepTime.getTime() + duration * 60000);
@@ -554,10 +520,10 @@
             
             item.innerHTML = `
                 <div class="metric-identity">
-                    <span class="cycle-count">${cycles} C</span>
+                    <span class="cycle-count">${cycles} CYCLES [${cyclesMap[cycles]}]</span>
                     <span class="time-value">${formatAMPM(wakeup)}</span>
                 </div>
-                ${(cycles === 5 || cycles === 6) ? '<span class="status-tracker">Optimal Target</span>' : `<span class="duration-label">${Math.floor(duration / 60)}h ${duration % 60}m</span>`}
+                ${(cycles === 5 || cycles === 6) ? '<span class="status-tracker">OPTIMAL REGIMEN</span>' : `<span class="duration-label">${Math.floor(duration / 60)}h ${duration % 60}m</span>`}
             `;
             container.appendChild(item);
         });
@@ -582,6 +548,7 @@
         
         let newHTML = "";
         let optimalFound = false;
+        const cyclesMap = {6: '9.0h', 5: '7.5h', 4: '6.0h', 3: '4.5h'};
 
         [6, 5, 4, 3].forEach(cycles => {
             const duration = cycles * 90;
@@ -593,26 +560,26 @@
                 newHTML += `
                     <div class="metric-item past">
                         <div class="metric-identity">
-                            <span class="cycle-count">${cycles} C</span>
+                            <span class="cycle-count">${cycles} CYCLES [${cyclesMap[cycles]}]</span>
                             <span class="time-value">${formatAMPM(bedtime)}</span>
                         </div>
-                        <span class="duration-label">Elapsed</span>
+                        <span class="duration-label">ELAPSED</span>
                     </div>`;
             } else if (!optimalFound && (cycles === 5 || cycles === 6)) {
                 newHTML += `
                     <div class="metric-item optimal">
                         <div class="metric-identity">
-                            <span class="cycle-count">${cycles} C</span>
+                            <span class="cycle-count">${cycles} CYCLES [${cyclesMap[cycles]}]</span>
                             <span class="time-value">${formatAMPM(bedtime)}</span>
                         </div>
-                        <span class="status-tracker">Optimal Target</span>
+                        <span class="status-tracker">OPTIMAL REGIMEN</span>
                     </div>`;
                 optimalFound = true;
             } else {
                 newHTML += `
                     <div class="metric-item">
                         <div class="metric-identity">
-                            <span class="cycle-count">${cycles} C</span>
+                            <span class="cycle-count">${cycles} CYCLES [${cyclesMap[cycles]}]</span>
                             <span class="time-value">${formatAMPM(bedtime)}</span>
                         </div>
                         <span class="duration-label">${hoursCount}h ${minsCount}m</span>
@@ -655,7 +622,7 @@
                 <div class="metric-identity">
                     <span class="time-value">${hrs}h ${mins}m</span>
                 </div>
-                <span class="status-tracker">Net Sleep Duration</span>
+                <span class="status-tracker">NET DURATION CALCULATED</span>
             </div>`;
     }
 
@@ -678,11 +645,11 @@
                 <div class="metric-identity">
                     <span class="time-value">${formatAMPM(bedtimeDate)}</span>
                 </div>
-                <span class="status-tracker">Ideal Wind Down Time</span>
+                <span class="status-tracker">OPTIMAL INTERCEPT BEDTIME</span>
             </div>`;
     }
 
-    // Default Fallbacks Map Configuration
+    // Storage Initialization
     const defaultTimes = {
         'bedtime': '22:30',
         'wakeuptime': '06:00',
@@ -697,13 +664,13 @@
         document.getElementById(id).value = saved !== null ? saved : defaultTimes[id];
     });
     
-    // Initial UI generation sequence triggers
+    // Initial triggers
     calculateWakeup();
     calculateBedtimes();
     evaluateDuration();
     evaluateBedtimeTarget();
 
-    // Loop system invocation cycles
+    // Loop system loops
     systemDynamicEngineTick();
     setInterval(systemDynamicEngineTick, 1000);
 </script>
