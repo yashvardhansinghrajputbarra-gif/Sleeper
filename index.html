@@ -19,7 +19,7 @@
             --text-dark: #4b5563;
 
             /* Drawer Variables */
-            --drawer-bg: rgba(15, 19, 26, 0.95);
+            --drawer-bg: rgba(15, 19, 26, 0.98);
             --drawer-border: rgba(255, 255, 255, 0.08);
         }
 
@@ -42,7 +42,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Ambient Premium Lighting Backgrounds */
         body::before {
             content: "";
             position: absolute;
@@ -54,7 +53,6 @@
             pointer-events: none;
         }
 
-        /* Centered Core Dashboard Structure */
         .main-container {
             background: var(--panel-bg);
             backdrop-filter: blur(30px) saturate(170%);
@@ -79,7 +77,6 @@
             position: relative;
         }
 
-        /* Premium Centerpiece Clock Header */
         header {
             text-align: center;
             margin-bottom: 1.5vh;
@@ -124,7 +121,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Layout Architecture Split Matrices */
         .split-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -157,7 +153,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* High-End Input Module Strips */
         .input-strip {
             display: flex;
             justify-content: space-between;
@@ -229,7 +224,6 @@
             white-space: nowrap;
         }
 
-        /* Elegant Output Telemetry Blocks */
         .output-stack {
             display: flex;
             flex-direction: column;
@@ -280,9 +274,8 @@
             letter-spacing: 0.5px;
         }
 
-        /* Metric Row Conditional States */
         .metric-row.past { 
-            opacity: 0.2; 
+            opacity: 0.25; 
         }
 
         .metric-row.optimal {
@@ -301,7 +294,7 @@
             font-weight: 600;
         }
 
-        /* ==================== HIDDEN UTILITY DRAWER SYSTEM ==================== */
+        /* ==================== QUICK CALC DRAWER CONSOLE ==================== */
         .drawer-toggle-btn {
             position: absolute;
             top: 3vh;
@@ -311,37 +304,37 @@
             color: var(--text-muted);
             padding: 10px 16px;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             z-index: 100;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
         }
 
         .drawer-toggle-btn:hover {
             color: var(--text-main);
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.15);
         }
 
         .utility-drawer {
             position: fixed;
             top: 0;
-            right: -420px; /* Hidden off-screen baseline */
-            width: 380px;
+            right: -420px;
+            width: 390px;
             height: 100vh;
             background: var(--drawer-bg);
             border-left: 1px solid var(--drawer-border);
-            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            box-shadow: -15px 0 50px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             z-index: 99;
-            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 40px 30px;
+            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px 25px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 35px;
+            gap: 30px;
         }
 
         .utility-drawer.open {
@@ -357,7 +350,7 @@
         }
 
         .drawer-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -368,8 +361,9 @@
             background: transparent;
             border: none;
             color: var(--text-dark);
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
+            padding: 0;
         }
 
         .drawer-close-btn:hover {
@@ -413,7 +407,7 @@
             text-transform: uppercase;
             color: var(--text-dark);
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
 
         .drawer-input-group input {
@@ -424,10 +418,6 @@
             font-weight: 600;
             outline: none;
             font-family: inherit;
-        }
-
-        .drawer-input-group input[type="number"] {
-            width: 100%;
         }
 
         .calc-action-row {
@@ -441,11 +431,12 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
             color: var(--text-main);
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             font-size: 12px;
+            transition: background 0.2s;
         }
 
         .math-btn:hover {
@@ -467,7 +458,6 @@
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
-            font-weight: 500;
         }
 
         .calc-res-val {
@@ -485,7 +475,6 @@
             input[type="time"], input[type="number"] { font-size: 18px; }
             .time-readout { font-size: 18px; }
             .utility-drawer { width: 100vw; right: -100vw; }
-            .drawer-toggle-btn { position: fixed; top: 15px; right: 15px; }
         }
     </style>
 </head>
@@ -496,12 +485,10 @@
     <div class="main-container">
         <header>
             <h1 class="sys-title">Sleep Matrix System</h1>
-            
             <div class="clock-container">
                 <span class="clock-digits" id="timeDigits">00:00</span>
                 <span class="clock-suffix" id="timeSuffix">AM</span>
             </div>
-
             <div class="date-display" id="dateDigits">SYSTEM ACTIVE</div>
         </header>
 
@@ -534,7 +521,6 @@
 
         <div class="lower-dock">
             <div class="dock-grid">
-                
                 <div class="card-column">
                     <div class="section-label">⏱️ Telemetry Calculator</div>
                     <div class="input-strip">
@@ -544,4 +530,382 @@
                                 <input type="time" id="directSleepTime" oninput="runDurationAnalysis()">
                             </div>
                             <div class="input-meta">
-                                <span class="meta-title">Wake Time
+                                <span class="meta-title">Wake Time</span>
+                                <input type="time" id="directWakeTime" oninput="runDurationAnalysis()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="output-stack" id="durationOutputBox"></div>
+                </div>
+
+                <div class="card-column">
+                    <div class="section-label">🎯 Target Hours Configuration</div>
+                    <div class="input-strip">
+                        <div class="input-wrapper-row" style="width: 100%;">
+                            <div class="input-meta">
+                                <span class="meta-title">Target Wake Time</span>
+                                <input type="time" id="targetWakeTime" oninput="runTargetAnalysis()">
+                            </div>
+                            <div class="input-meta">
+                                <span class="meta-title">Desired Hours</span>
+                                <input type="number" id="desiredHours" min="1" max="24" step="0.5" oninput="runTargetAnalysis()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="output-stack" id="targetOutputBox"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="utility-drawer" id="utilityDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">⚡ Time Engine Tools</span>
+            <button class="drawer-close-btn" onclick="toggleDrawer()">✕</button>
+        </div>
+
+        <div class="calc-box">
+            <div class="calc-headline">⏰ 1. Shift Current Live Time</div>
+            <div class="calc-row-inputs">
+                <div class="drawer-input-group">
+                    <span>Add Hours</span>
+                    <input type="number" id="liveShiftHours" min="0" oninput="calculateLiveShift()">
+                </div>
+                <div class="drawer-input-group">
+                    <span>Add Mins</span>
+                    <input type="number" id="liveShiftMins" min="0" oninput="calculateLiveShift()">
+                </div>
+            </div>
+            <div class="calc-result-strip">
+                <span class="calc-res-lbl">Shifted Time</span>
+                <span class="calc-res-val" id="liveShiftResult">--:-- --</span>
+            </div>
+        </div>
+
+        <div class="calc-box">
+            <div class="calc-headline">📚 2. Lecture Mod Engine</div>
+            <div class="calc-row-inputs">
+                <div class="drawer-input-group" style="flex: 1.5;">
+                    <span>Lecture Start</span>
+                    <input type="time" id="lectureBaseTime" oninput="refreshLectureState()">
+                </div>
+                <div class="drawer-input-group">
+                    <span>Hours</span>
+                    <input type="number" id="lectureHours" min="0" oninput="refreshLectureState()">
+                </div>
+                <div class="drawer-input-group">
+                    <span>Mins</span>
+                    <input type="number" id="lectureMins" min="0" oninput="refreshLectureState()">
+                </div>
+            </div>
+            <div class="calc-action-row">
+                <button class="math-btn" onclick="calculateLectureShift('add')">＋ Add Shift</button>
+                <button class="math-btn" onclick="calculateLectureShift('sub')">－ Sub Shift</button>
+            </div>
+            <div class="calc-result-strip">
+                <span class="calc-res-lbl" id="lectureResultLabel">Adjusted Mark</span>
+                <span class="calc-res-val" id="lectureResult">--:-- --</span>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let currentLectureMode = 'add';
+
+    function toggleDrawer() {
+        document.getElementById('utilityDrawer').classList.toggle('open');
+    }
+
+    function formatTimeStrings(date) {
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        minutes = String(minutes).padStart(2, '0');
+        return `${hours}:${minutes} ${ampm}`;
+    }
+
+    function saveState(id, value) {
+        localStorage.setItem(id, value);
+    }
+
+    function getTargetDateObject(timeString) {
+        if (!timeString) return null;
+        const [h, m] = timeString.split(':').map(Number);
+        const now = new Date();
+        let target = new Date();
+        target.setHours(h, m, 0, 0);
+        if (target < now) {
+            target.setDate(target.getDate() + 1);
+        }
+        return target;
+    }
+
+    function systemHeartbeatEngine() {
+        const now = new Date();
+
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        
+        document.getElementById("timeDigits").textContent = `${String(hours).padStart(2, '0')}:${minutes}`;
+        document.getElementById("timeSuffix").textContent = ampm;
+
+        const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById("dateDigits").textContent = now.toLocaleDateString('en-US', dateOptions).toUpperCase();
+
+        const bInput = document.getElementById('bedtime').value;
+        const bBadge = document.getElementById('bedtimeCountdown');
+        if (bInput) {
+            const tBed = getTargetDateObject(bInput);
+            let d = tBed - now;
+            if(d < 0) d += 86400000;
+            let h = String(Math.floor(d / 3600000)).padStart(2, '0');
+            let m = String(Math.floor((d % 3600000) / 60000)).padStart(2, '0');
+            bBadge.innerText = `${h}h ${m}m left`;
+        }
+
+        const wInput = document.getElementById('wakeuptime').value;
+        const wBadge = document.getElementById('wakeupCountdown');
+        if (wInput) {
+            const tWake = getTargetDateObject(wInput);
+            let d = tWake - now;
+            if(d < 0) d += 86400000;
+            let h = String(Math.floor(d / 3600000)).padStart(2, '0');
+            let m = String(Math.floor((d % 3600000) / 60000)).padStart(2, '0');
+            wBadge.innerText = `${h}h ${m}m left`;
+        }
+
+        calculateLiveShift();
+        runBedtimeAnalysis();
+    }
+
+    function calculateLiveShift() {
+        const now = new Date();
+        const hShift = parseInt(document.getElementById('liveShiftHours').value) || 0;
+        const mShift = parseInt(document.getElementById('liveShiftMins').value) || 0;
+        
+        saveState('liveShiftHours', hShift);
+        saveState('liveShiftMins', mShift);
+
+        const shiftedDate = new Date(now.getTime() + (hShift * 3600000) + (mShift * 60000));
+        document.getElementById('liveShiftResult').innerText = formatTimeStrings(shiftedDate);
+    }
+
+    function refreshLectureState() {
+        calculateLectureShift(currentLectureMode);
+    }
+
+    function calculateLectureShift(mode) {
+        currentLectureMode = mode;
+        const baseTimeVal = document.getElementById('lectureBaseTime').value;
+        if (!baseTimeVal) return;
+
+        saveState('lectureBaseTime', baseTimeVal);
+        const hMod = parseInt(document.getElementById('lectureHours').value) || 0;
+        const mMod = parseInt(document.getElementById('lectureMins').value) || 0;
+        
+        saveState('lectureHours', hMod);
+        saveState('lectureMins', mMod);
+
+        const [h, m] = baseTimeVal.split(':').map(Number);
+        let targetDate = new Date();
+        targetDate.setHours(h, m, 0, 0);
+
+        const totalMsMod = (hMod * 3600000) + (mMod * 60000);
+
+        if (mode === 'add') {
+            targetDate = new Date(targetDate.getTime() + totalMsMod);
+            document.getElementById('lectureResultLabel').innerText = "Adjusted Mark (＋)";
+        } else {
+            targetDate = new Date(targetDate.getTime() - totalMsMod);
+            document.getElementById('lectureResultLabel').innerText = "Adjusted Mark (－)";
+        }
+
+        document.getElementById('lectureResult').innerText = formatTimeStrings(targetDate);
+    }
+
+    function runWakeupAnalysis() {
+        const inputVal = document.getElementById('bedtime').value;
+        if (!inputVal) return;
+        saveState('bedtime', inputVal);
+
+        const [h, m] = inputVal.split(':').map(Number);
+        let sleepOnset = new Date();
+        sleepOnset.setHours(h, m, 0, 0);
+        sleepOnset.setMinutes(sleepOnset.getMinutes() + 10);
+
+        document.getElementById('onsetNotification').innerHTML = `
+            <div class="onset-banner">Approximate sleep onset: <span>${formatTimeStrings(sleepOnset)}</span></div>
+        `;
+        
+        const stack = document.getElementById('bedtimeOutputStack');
+        stack.innerHTML = "";
+        
+        const labelsMap = {3: '4.5h', 4: '6.0h', 5: '7.5h', 6: '9.0h'};
+        [3, 4, 5, 6].forEach(cycles => {
+            const mins = cycles * 90;
+            const wakeTarget = new Date(sleepOnset.getTime() + mins * 60000);
+            const row = document.createElement('div');
+            row.className = (cycles === 5 || cycles === 6) ? 'metric-row optimal' : 'metric-row';
+            
+            row.innerHTML = `
+                <div class="metric-core">
+                    <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
+                    <span class="time-readout">${formatTimeStrings(wakeTarget)}</span>
+                </div>
+                ${(cycles === 5 || cycles === 6) ? '<span class="tag-status-optimal">Optimal Target</span>' : `<span class="label-readout">${Math.floor(mins / 60)}h ${mins % 60}m</span>`}
+            `;
+            stack.appendChild(row);
+        });
+    }
+
+    function runBedtimeAnalysis() {
+        const inputVal = document.getElementById('wakeuptime').value;
+        if (!inputVal) return;
+        saveState('wakeuptime', inputVal);
+
+        const [wH, wM] = inputVal.split(':').map(Number);
+        const now = new Date();
+        let wakeTarget = new Date();
+        wakeTarget.setHours(wH, wM, 0, 0);
+
+        if (wakeTarget < now && (now.getTime() - wakeTarget.getTime() > 3600000)) {
+            wakeTarget.setDate(wakeTarget.getDate() + 1);
+        }
+
+        const stack = document.getElementById('wakeupOutputStack');
+        let calculatedHTML = "";
+        let optimalFound = false;
+        const labelsMap = {6: '9.0h', 5: '7.5h', 4: '6.0h', 3: '4.5h'};
+
+        [6, 5, 4, 3].forEach(cycles => {
+            const mins = cycles * 90;
+            const bedtimeTarget = new Date(wakeTarget.getTime() - (mins + 10) * 60000);
+            const hrsCount = Math.floor(mins / 60);
+            const minsCount = mins % 60;
+
+            if (now > bedtimeTarget) {
+                calculatedHTML += `
+                    <div class="metric-row past">
+                        <div class="metric-core">
+                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
+                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
+                        </div>
+                        <span class="label-readout">Elapsed</span>
+                    </div>`;
+            } else if (!optimalFound && (cycles === 5 || cycles === 6)) {
+                calculatedHTML += `
+                    <div class="metric-row optimal">
+                        <div class="metric-core">
+                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
+                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
+                        </div>
+                        <span class="tag-status-optimal">Optimal Target</span>
+                    </div>`;
+                optimalFound = true;
+            } else {
+                calculatedHTML += `
+                    <div class="metric-row">
+                        <div class="metric-core">
+                            <span class="pill-tag">${cycles} Cycles [${labelsMap[cycles]}]</span>
+                            <span class="time-readout">${formatTimeStrings(bedtimeTarget)}</span>
+                        </div>
+                        <span class="label-readout">${hrsCount}h ${minsCount}m</span>
+                    </div>`;
+            }
+        });
+        stack.innerHTML = calculatedHTML;
+    }
+
+    function runDurationAnalysis() {
+        const sVal = document.getElementById('directSleepTime').value;
+        const wVal = document.getElementById('directWakeTime').value;
+        if (!sVal || !wVal) return;
+        
+        saveState('directSleepTime', sVal);
+        saveState('directWakeTime', wVal);
+
+        const [sH, sM] = sVal.split(':').map(Number);
+        const [wH, wM] = wVal.split(':').map(Number);
+
+        let sDate = new Date(2000, 0, 1, sH, sM);
+        let wDate = new Date(2000, 0, 1, wH, wM);
+
+        if (wDate <= sDate) {
+            wDate.setDate(wDate.getDate() + 1);
+        }
+
+        let deltaMs = wDate - sDate - (10 * 60 * 1000);
+        if (deltaMs < 0) deltaMs = 0;
+
+        const totalMins = Math.floor(deltaMs / 60000);
+        const h = Math.floor(totalMins / 60);
+        const m = totalMins % 60;
+
+        document.getElementById('durationOutputBox').innerHTML = `
+            <div class="metric-row optimal" style="width: 100%">
+                <div class="metric-core">
+                    <span class="time-readout">${h}h ${m}m</span>
+                </div>
+                <span class="tag-status-optimal">Calculated Net Sleep</span>
+            </div>`;
+    }
+
+    function runTargetAnalysis() {
+        const wVal = document.getElementById('targetWakeTime').value;
+        const hVal = parseFloat(document.getElementById('desiredHours').value);
+        if (!wVal || isNaN(hVal)) return;
+
+        saveState('targetWakeTime', wVal);
+        saveState('desiredHours', hVal);
+
+        const [wH, wM] = wVal.split(':').map(Number);
+        let wDate = new Date(2000, 0, 2, wH, wM); 
+
+        const totalSub = (hVal * 60) + 10;
+        let bDate = new Date(wDate.getTime() - (totalSub * 60000));
+
+        document.getElementById('targetOutputBox').innerHTML = `
+            <div class="metric-row optimal" style="width: 100%">
+                <div class="metric-core">
+                    <span class="time-readout">${formatTimeStrings(bDate)}</span>
+                </div>
+                <span class="tag-status-optimal">Ideal Target Bedtime</span>
+            </div>`;
+    }
+
+    // Default configuration hydration values (HTML valid 24hr strings)
+    const fallbackMap = {
+        'bedtime': '22:30',
+        'wakeuptime': '06:00',
+        'directSleepTime': '23:00',
+        'directWakeTime': '07:00',
+        'targetWakeTime': '06:30',
+        'desiredHours': '8',
+        'liveShiftHours': '1',
+        'liveShiftMins': '30',
+        'lectureBaseTime': '09:00',
+        'lectureHours': '1',
+        'lectureMins': '15'
+    };
+
+    Object.keys(fallbackMap).forEach(key => {
+        const stored = localStorage.getItem(key);
+        document.getElementById(key).value = stored !== null ? stored : fallbackMap[key];
+    });
+    
+    // Initialize processing blocks completely
+    runWakeupAnalysis();
+    runBedtimeAnalysis();
+    runDurationAnalysis();
+    runTargetAnalysis();
+    calculateLectureShift('add');
+
+    systemHeartbeatEngine();
+    setInterval(systemHeartbeatEngine, 1000);
+</script>
+
+</body>
+</html>
